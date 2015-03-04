@@ -1,0 +1,17 @@
+{
+  "name": "tlc",
+  "version": "1.0.0",
+  "description": "a templating engine",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC",
+  "dependencies": {
+    "JSONPath": "^0.10.0",
+    "cheerio": "^0.18.0",
+    "lodash": "^2.4.1",
+    "pegjs": "^0.8.0"
+  }
+}
