@@ -32,3 +32,11 @@ Translate with a JSON object, like this:
 Here's what comes out:
 
 	<h1 data-tlc="..." class="excited">Hello World!</h1>
+	
+Or with a "noncommital" mood:
+
+	<h1 data-tlc="..." class="noncommital">Hello World</h1>
+
+Or with a "glum" mood:
+
+	<h1 data-tlc="..." class="glum">Hello World...</h1>
