@@ -1,17 +1,33 @@
 {
   "name": "tlc",
-  "version": "1.0.0",
+  "version": "0.0.2",
   "description": "a templating engine",
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
-  "author": "",
-  "license": "ISC",
+  "author": "Michael Chance",
+  "license": "New BSD",
   "dependencies": {
     "JSONPath": "^0.10.0",
     "cheerio": "^0.18.0",
     "lodash": "^2.4.1",
+    "multiline": "^1.0.2",
     "pegjs": "^0.8.0"
-  }
+  },
+  "devDependencies": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/michaelchance/tlc.git"
+  },
+  "keywords": [
+    "template",
+    "html5",
+    "express",
+    "jquery"
+  ],
+  "bugs": {
+    "url": "https://github.com/michaelchance/tlc/issues"
+  },
+  "homepage": "https://github.com/michaelchance/tlc"
 }
