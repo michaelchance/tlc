@@ -16,7 +16,7 @@ Take tlc template that looks like this:
 		if(is $mood --eq='excited'){{
 			format --append='!';
 			}};
-		if(is $mood --eq='excited'){{
+		if(is $mood --eq='glum'){{
 			format --append='...';
 			}};
 		apply --append;
@@ -29,6 +29,6 @@ Translate with a JSON object, like this:
 		"mood":"excited"
 	}
 	
-And if you couldn't guess from the syntax, here's what comes out:
+Here's what comes out:
 
 	<h1 data-tlc="..." class="excited">Hello World!</h1>
