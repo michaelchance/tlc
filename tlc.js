@@ -484,7 +484,7 @@ module.exports = tlc;
 			for(var i = 0, L = cmd.args.length; i < L; i += 1)	{
 				
 				if(cmd.args[i].type == 'variable'){
-					
+					value = globals.binds[cmd.args[i].value];
 					}
 				else if(cmd.args[i].key){
 					function isBlank(v)	{
@@ -541,7 +541,6 @@ module.exports = tlc;
 						}
 					}
 				}
-			globals.binds[globals.focusBind] = value;
 			return r;
 			},
 
