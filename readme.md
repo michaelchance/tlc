@@ -7,36 +7,45 @@ tlc is:
 	* designed to fit in attributes- commits to using single-quotes to keep your syntax clean.
 * Shell script-y, readable, obvious
 * Extensible
+* Packaged for use with ExpressJS
+* Will be useable with jQuery
 
-Take tlc template that looks like this:
-
-	<h1 data-tlc="
-		bind $mood '.mood';
-		bind $msg '.message';
-		if(is $mood --eq='excited'){{
-			format --append='!';
-			}};
-		if(is $mood --eq='glum'){{
-			format --append='...';
-			}};
-		apply --append;
-		apply --add --class=$mood;"
-		class=""></h1>
+An example of usage with Express
 	
-Translate with a JSON object, like this:
-	{
-		"message":"Hello World",
-		"mood":"excited"
-	}
+	var express = require('express');
+	var app = express();
+
+	var http = require('http');
+
+	var fs = require('fs');
+
+	var tlc = require('tlc');
+
+	app.engine('html',tlc.express);
+	app.set('views', './path/to/views/'); // specify the views directory
+	app.set('view engine', 'html'); // register the template engine
+
+	app.get('/',function(req,res){
+		res.render('index',{
+			message : "Hello World",
+			});
+		});
+
+	http.createServer(app).listen(3000);
 	
-Here's what comes out:
-
-	<h1 data-tlc="..." class="excited">Hello World!</h1>
+the contents of ./path/to/views/index.html:
 	
-Or with a "noncommital" mood:
+	<!DOCTYPE html>
+	<html>
+	<head>
+	<meta charset="utf-8">
+	<title>test</title>
+	</head>
+	<body>
+	<h1 *data-tlc="bind $msg '.message'; apply --append;"*></h1>
+	</body>
 
-	<h1 data-tlc="..." class="noncommital">Hello World</h1>
+	</html>
 
-Or with a "glum" mood:
-
-	<h1 data-tlc="..." class="glum">Hello World...</h1>
+Go to localhost:3000 and you should see
+> # Hello World
