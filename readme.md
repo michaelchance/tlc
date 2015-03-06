@@ -26,6 +26,7 @@ An example of usage with Express
 	app.set('view engine', 'html'); // register the template engine
 
 	app.get('/',function(req,res){
+		//The second parameter to render should be a JSON object that the view will be translated over.
 		res.render('index',{
 			message : "Hello World",
 			});
@@ -42,6 +43,10 @@ the contents of ./path/to/views/index.html:
 	<title>test</title>
 	</head>
 	<body>
+		<!-- 
+		note here '.message' is the JSONPath string to 
+		a member of the JSON object being translated 
+		-->
 		<h1 data-tlc="bind $msg '.message'; apply --append=$msg;"></h1>
 	</body>
 
@@ -53,7 +58,7 @@ When running the app, localhost:3000 will serve
 ## Commands
 
 The above example introduces 2 of the core commands in tlc, `bind` and `apply`.  Commands are functions, executed with arguments, within a context.
-For EACH tag, before any commands are executed, the tlc context consists solely of the JSON data object passed into it.
+Each tag creates a new context, and before any commands are executed, it consists solely of the JSON data object being translated.
 
 `bind` is one of the most important commands in tlc- it allows you to bind (and even create) a variable within the tlc's context to a component of
 JSON data object.  For example: `bind $msg '.message';` from above create's the variable `msg`, and writes "Hello World" to it from the JSON object.
