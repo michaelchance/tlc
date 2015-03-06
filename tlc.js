@@ -543,7 +543,15 @@ module.exports = tlc;
 				}
 			return r;
 			},
-
+		focus : function(cmd,globals) {
+			if(cmd.args[0] && cmd.args[0].type == 'variable'){
+				globals.focusBind = cmd.args[0].value;
+				return true;
+				}
+			else{
+				return false;
+				}
+			},
 		math : function(cmd,globals)	{
 			var bind = Number(globals.binds[globals.focusBind]);
 			if(!isNaN(bind))	{
@@ -558,6 +566,8 @@ module.exports = tlc;
 								bind -= value; break;
 							case "mult":
 								bind *= value; break;
+							case "mod":
+								bind %= value; break;
 							case "div":
 								bind /= value; break;
 							case "precision":
