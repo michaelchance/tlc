@@ -29,13 +29,13 @@ var tlc = {
 				$element.append(templatePackages[templatePointerArray[0]][templatePointerArray[1]].html())
 				}
 			else {
-				console.error('could not process template string: '+template);
+				//console.error('could not process template string: '+template);
 				return false;
 				}
 			}
 		else if(typeof template !== 'undefined') {
 			//template was not a jQuery object, throw a tantrum
-			console.error("TLC error: template provided was not a jQuery object");
+			//console.error("TLC error: template provided was not a jQuery object");
 			}
 		else{/*no template specified, meh*/}
 		
@@ -92,7 +92,7 @@ module.exports = tlc;
 						r[args[i].value] = globals.binds[args[i].value];
 						}
 					else	{
-						console.error("in argsToObject, type is set to variable, but no key is set AND the value is not a string.");
+						//console.error("in argsToObject, type is set to variable, but no key is set AND the value is not a string.");
 						//something unexpected happened.  no key. value is an object.
 						}
 					}
@@ -136,7 +136,7 @@ module.exports = tlc;
 					}
 				}
 			catch(e)	{
-				console.error("TLC error: "+errorMessage(e)+" for: "+tlc);
+				//console.error("TLC error: "+errorMessage(e)+" for: "+tlc);
 				r = false;
 				}
 			});
@@ -160,16 +160,16 @@ module.exports = tlc;
 			if(handlers[cmd.type]){
 				if(handlers[cmd.type]($tag,cmd,globals,data)){}
 				else{
-					console.error("The following command has returned false in execution:");
-					console.dir(cmd);
-					console.dir(globals);
-					console.dir(data);
+					// console.error("The following command has returned false in execution:");
+					// console.dir(cmd);
+					// console.dir(globals);
+					// console.dir(data);
 					r = false; 
 					break;
 					}
 				}
 			else {
-				console.error("Unsupported command type: "+cmd.type);
+				// console.error("Unsupported command type: "+cmd.type);
 				r = false;
 				break;
 				}
@@ -186,7 +186,7 @@ module.exports = tlc;
 				module = modules[cmd.module];
 				}
 			else {
-				console.error("Unknown module "+cmd.module);
+				// console.error("Unknown module "+cmd.module);
 				return false;
 				}
 			
@@ -247,7 +247,7 @@ module.exports = tlc;
 					}
 				}
 			else{
-				console.error("Command "+cmd.name+" does not exist in module "+cmd.module);
+				// console.error("Command "+cmd.name+" does not exist in module "+cmd.module);
 				return false;
 				}
 			},
@@ -274,19 +274,19 @@ module.exports = tlc;
 			return cmd.Set.value;
 			},
 		IF : function($tag,cmd,globals,data){
-			console.log('IF');
+			// console.log('IF');
 			var p1; //first param for comparison.
 			var ifCmd = cmd.When;
 			if(handlers.command($tag,ifCmd,globals,data)){
 				//do the isTrue
-				console.log('in the isTrue');
+				// console.log('in the isTrue');
 				if(cmd.IsTrue){
 					return executeCommands($tag,globals,cmd.IsTrue.statements,data);
 					}
 				}
 			else{
 				//do the isfalse
-				console.log('in the isFalse');
+				// console.log('in the isFalse');
 				if(cmd.IsFalse){
 					return executeCommands($tag,globals,cmd.IsFalse.statements,data);
 					}
@@ -448,7 +448,7 @@ module.exports = tlc;
 
 					//add and remove work w/ either 'tag' or 'class'.
 					case 'add' : 
-						console.log('adding');
+						// console.log('adding');
 					//IE8 wants 'class' instead of .class.
 						if(argObj['class'])	{$tag.addClass(argObj['class'])}
 						else if(argObj.tag)	{
@@ -456,20 +456,20 @@ module.exports = tlc;
 							}
 						break; 
 					case 'remove':
-						console.log('removing');
+						// console.log('removing');
 						if(argObj['class'])	{$tag.removeClass(argObj['class'])}
 						else if(argObj.tag)	{
 							$tag.remove();
 		//					globals.tags[argObj.tag].remove();
 							}
 						else	{
-							console.error("For apply, the verb was set to remove, but neither a tag or class were defined. argObj follows:",'warn'); 
-							console.error(argObj);
+							// console.error("For apply, the verb was set to remove, but neither a tag or class were defined. argObj follows:",'warn'); 
+							// console.error(argObj);
 							}
 						break; 
 					
 					case 'prepend': $tag.prepend(data); break;
-					case 'append': console.log('append'); $tag.append(data); break;
+					case 'append': $tag.append(data); break;
 					case 'replace': 
 						var $n = $(data); //the contents of what will replace tag may or may not be a tag.
 						if($n.length)	{
@@ -524,13 +524,13 @@ module.exports = tlc;
 					}
 				}
 			else if(numVerbs === 0)	{
-				console.error("For the following command no verb was specified on the apply. Exactly 1 verb must be specified.",'warn'); 
-				console.error(cmd);
-				console.error(argObj);
+				// console.error("For the following command no verb was specified on the apply. Exactly 1 verb must be specified.",'warn'); 
+				// console.error(cmd);
+				// console.error(argObj);
 				}
 			else	{
-				console.error("For command (below) either more than 1 verb or more than 1 formatter was specified on the apply. Exactly 1 of each is allowed per command.",'warn');
-				console.error(cmd);
+				// console.error("For command (below) either more than 1 verb or more than 1 formatter was specified on the apply. Exactly 1 of each is allowed per command.",'warn');
+				// console.error(cmd);
 				}
 
 			return r;
@@ -662,7 +662,7 @@ module.exports = tlc;
 			if(value)	{
 				var argObj = argsToObject(cmd.args,globals), d = new Date(value*1000);
 				if(isNaN(d.getMonth()+1))	{
-					console.error("In tlc core#datetime, value ["+value+"] is not a valid time format for Date()",'warn');
+					// console.error("In tlc core#datetime, value ["+value+"] is not a valid time format for Date()",'warn');
 					}
 		//### FUTURE
 		//		else if(argObj.out-strftime)	{}
