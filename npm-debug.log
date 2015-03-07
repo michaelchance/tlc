@@ -1,0 +1,106 @@
+0 info it worked if it ends with ok
+1 verbose cli [ 'C:\\Program Files (x86)\\nodejs\\\\node.exe',
+1 verbose cli   'C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js',
+1 verbose cli   'publish' ]
+2 info using npm@2.5.1
+3 info using node@v0.12.0
+4 verbose node symlink C:\Program Files (x86)\nodejs\\node.exe
+5 verbose publish [ '.' ]
+6 silly cache add args [ '.', null ]
+7 verbose cache add spec .
+8 silly cache add parsed spec { raw: '.',
+8 silly cache add   scope: null,
+8 silly cache add   name: null,
+8 silly cache add   rawSpec: '.',
+8 silly cache add   spec: 'D:\\tlc',
+8 silly cache add   type: 'directory' }
+9 verbose addLocalDirectory C:\Users\Michael\AppData\Roaming\npm-cache\tlc\0.0.5\package.tgz not in flight; packing
+10 verbose tar pack [ 'C:\\Users\\Michael\\AppData\\Roaming\\npm-cache\\tlc\\0.0.5\\package.tgz',
+10 verbose tar pack   'D:\\tlc' ]
+11 verbose tarball C:\Users\Michael\AppData\Roaming\npm-cache\tlc\0.0.5\package.tgz
+12 verbose folder D:\tlc
+13 info prepublish tlc@0.0.5
+14 verbose addLocalTarball adding from inside cache C:\Users\Michael\AppData\Roaming\npm-cache\tlc\0.0.5\package.tgz
+15 silly cache afterAdd tlc@0.0.5
+16 verbose afterAdd C:\Users\Michael\AppData\Roaming\npm-cache\tlc\0.0.5\package\package.json not in flight; writing
+17 verbose afterAdd C:\Users\Michael\AppData\Roaming\npm-cache\tlc\0.0.5\package\package.json written
+18 silly publish { name: 'tlc',
+18 silly publish   version: '0.0.5',
+18 silly publish   description: 'a templating engine',
+18 silly publish   main: 'index.js',
+18 silly publish   scripts: { test: 'echo "Error: no test specified" && exit 1' },
+18 silly publish   author: { name: 'Michael Chance' },
+18 silly publish   license: 'New BSD',
+18 silly publish   dependencies:
+18 silly publish    { JSONPath: '^0.10.0',
+18 silly publish      cheerio: '^0.18.0',
+18 silly publish      lodash: '^2.4.1',
+18 silly publish      multiline: '^1.0.2',
+18 silly publish      pegjs: '^0.8.0' },
+18 silly publish   devDependencies: {},
+18 silly publish   repository: { type: 'git', url: 'https://github.com/michaelchance/tlc.git' },
+18 silly publish   keywords: [ 'template', 'html5', 'express', 'jquery' ],
+18 silly publish   bugs: { url: 'https://github.com/michaelchance/tlc/issues' },
+18 silly publish   homepage: 'https://github.com/michaelchance/tlc',
+18 silly publish   readme: '# Tag Line Commands\r\n\r\ntlc is:\r\n\r\n* A Verbose, Robust Templating Language\r\n* Valid HTML5\r\n\t* designed to fit in attributes- commits to using single-quotes to keep your syntax clean.\r\n* Shell script-y, readable, obvious\r\n* Extensible\r\n* Packaged for use with ExpressJS\r\n* Will be useable with jQuery\r\n\r\nAn example of usage with Express\r\n\t\r\n\tvar express = require(\'express\');\r\n\tvar app = express();\r\n\r\n\tvar http = require(\'http\');\r\n\r\n\tvar fs = require(\'fs\');\r\n\r\n\tvar tlc = require(\'tlc\');\r\n\r\n\tapp.engine(\'html\',tlc.express);\r\n\tapp.set(\'views\', \'./path/to/views/\'); // specify the views directory\r\n\tapp.set(\'view engine\', \'html\'); // register the template engine\r\n\r\n\tapp.get(\'/\',function(req,res){\r\n\t\t//The second parameter to render should be a JSON object that the view will be translated over.\r\n\t\tres.render(\'index\',{\r\n\t\t\tmessage : "Hello World",\r\n\t\t\t});\r\n\t\t});\r\n\r\n\thttp.createServer(app).listen(3000);\r\n\t\r\nthe contents of ./path/to/views/index.html:\r\n\t\r\n\t<!DOCTYPE html>\r\n\t<html>\r\n\t<head>\r\n\t<meta charset="utf-8">\r\n\t<title>test</title>\r\n\t</head>\r\n\t<body>\r\n\t\t<!-- \r\n\t\tnote here \'.message\' is the JSONPath string to \r\n\t\ta member of the JSON object being translated \r\n\t\t-->\r\n\t\t<h1 data-tlc="bind $msg \'.message\'; apply --append=$msg;"></h1>\r\n\t</body>\r\n\r\n\t</html>\r\n\r\nWhen running the app, localhost:3000 will serve\r\n> # Hello World\r\n\r\n## Commands\r\n\r\nThe above example introduces 2 of the core commands in tlc, `bind` and `apply`.  Commands are functions, executed with arguments, within a context.\r\nEach tag creates a new context, and before any commands are executed, it consists solely of the JSON data object being translated.\r\n\r\n`bind` is one of the most important commands in tlc- it allows you to bind (and even create) a variable within the tlc\'s context to a component of\r\nJSON data object.  For example: `bind $msg \'.message\';` from above create\'s the variable `msg`, and writes "Hello World" to it from the JSON object.\r\nThis command takes 2 arguments- first, a variable reference to bind into, and second, a JSONPath formatted string to reference the binding.  \r\n\r\nOur second command, `apply --append=$msg;`, de-reference to our variable reference, `msg`.  The `apply` command is used for applying \r\nchanges to the tag we are executing commands on, in this case, appending to it.\r\n\r\nNote that we can shorten our tlc statement to `bind $msg \'.message\'; apply --append;` and it will still apply the contents of the `msg` variable.\r\nThis is because by `bind`ing it, `msg` has become the *focus* variable.  All core commands will use the focus variable if none is provided.  This\r\nis both for syntactic convenience, and also to allow simple chaining on the focus variable, for example:\r\n\t\r\n\tvar productData = {\r\n\t\t"name" : "cat food"\r\n\t\t"price" : "3.14"\r\n\t\t}\r\n\r\n\t<div class="price" data-tlc="\r\n\t\tbind $cents \'.price\';\r\n\t\tmath --mult=\'100\' --mod=\'100\';\r\n\t\tbind $dollars \'.price\';\r\n\t\tmath --precision=\'0\';\r\n\t\tformat --prepend=\'$\' --append=\'.\';\r\n\t\tfocus $cents;\r\n\t\tformat --prepend=\'<span class=\\"cents\\">\' --append=\'</span>\';\r\n\t\tapply --append=$dollars;\r\n\t\tapply --append=$cents;\r\n\t\t"</div>\r\n\t\t\r\nHoly new commands, batman!  A few things to note here:\r\n* `math --mult=\'100\' --mod=\'100\';` - The `math` command parses its arguments sequentially, meaning that you can daisy chain a bunch of arithmetic together for convenience.  Note, a few lines down, `format` does the same thing.\r\n* `format --prepend=\'$\' --append=\'.\';` - The `format` command allows you to format the focus variable before you append it to the tag.  Note a few lines down- you can use format to add HTML content.\r\n* `focus $cents;` - The `focus` command shifts the current focus variable, just like `bind` (and `set`), however it doesn\'t change the contents of the variable like `bind` (and `set`).\r\n* `apply --append=$dollars; apply --append=$cents;` - The `apply` command only takes one \'verb\' at a time, currently.  This may change in future versions of the core API, but for now, we can\'t daisy chain like math.\r\n\r\nThe full list of core commands:\r\n* `bind` : bind (and create) a variable to the JSON data object\r\n* `set` : set  (and create) a variable to a scalar value;\r\n* `apply` : apply a change to the tag\r\n* `format` : format the focus variable\r\n* `tlc` : recursively call tlc for the contents of the tag.  This is useful for when you have added tlc from within your tlc commands (yo dawg)\r\n* `stringify` : set the focus variable to a stringified version of its current value;\r\n* `focus` : set the focus to a different variable.\r\n* `math` : perform arithmetic on the focus variable\r\n* `datetime` : set the focus variable to the current date.  `--out=\'pretty\'` or `--out=\'mdy\'` formats are supported.\r\n\r\n## Modules\r\n\r\nModules allow developers to extend the command set usable in tlc:\r\n\r\n\tvar tlc = require(\'tlc\');\r\n\tvar template = require(\'tlc-template\');\r\n\r\n\ttlc.addModule(\'template\',template);\r\n\t\r\nThis module can be referenced in templates:\r\n\r\n\t<div data-tlc="template#append --templateid=\'sideBarTemplate\'; bind $var \'.sidebar[2]\'; tlc;"></div>',
+18 silly publish   readmeFilename: 'readme.md',
+18 silly publish   gitHead: 'fa47a6c2fce8487f0b5840fc83550217f76ece7c',
+18 silly publish   _id: 'tlc@0.0.5',
+18 silly publish   _shasum: 'db4a8795f52f5bcd428c2ca4db561786c6deda42',
+18 silly publish   _from: '.' }
+19 silly mapToRegistry name tlc
+20 silly mapToRegistry using default registry
+21 silly mapToRegistry registry https://registry.npmjs.org/
+22 silly mapToRegistry uri https://registry.npmjs.org/tlc
+23 verbose publish registryBase https://registry.npmjs.org/
+24 silly publish uploading C:\Users\Michael\AppData\Roaming\npm-cache\tlc\0.0.5\package.tgz
+25 verbose request uri https://registry.npmjs.org/tlc
+26 verbose request sending authorization for write operation
+27 info attempt registry request try #1 at 4:00:55 PM
+28 verbose request id 81b709506dd64fc0
+29 http request PUT https://registry.npmjs.org/tlc
+30 http 403 https://registry.npmjs.org/tlc
+31 verbose headers { date: 'Sat, 07 Mar 2015 00:00:51 GMT',
+31 verbose headers   server: 'CouchDB/1.5.0 (Erlang OTP/R16B03)',
+31 verbose headers   'content-type': 'application/json',
+31 verbose headers   'cache-control': 'max-age=60',
+31 verbose headers   'content-length': '230',
+31 verbose headers   'accept-ranges': 'bytes',
+31 verbose headers   via: '1.1 varnish',
+31 verbose headers   'x-served-by': 'cache-lax1434-LAX',
+31 verbose headers   'x-cache': 'MISS',
+31 verbose headers   'x-cache-hits': '0',
+31 verbose headers   'x-timer': 'S1425686451.226594,VS0,VE77',
+31 verbose headers   'keep-alive': 'timeout=10, max=50',
+31 verbose headers   connection: 'Keep-Alive' }
+32 verbose request invalidating C:\Users\Michael\AppData\Roaming\npm-cache\registry.npmjs.org\tlc on PUT
+33 error publish Failed PUT 403
+34 verbose stack Error: forbidden Attempting to modify version 0.0.5,
+34 verbose stack which was previously published on 2015-03-06T23:56:59.236Z.
+34 verbose stack This is forbidden, to maintain package integrity.
+34 verbose stack Please update the version number and try again.: tlc
+34 verbose stack     at CachingRegistryClient.<anonymous> (C:\Program Files (x86)\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:254:14)
+34 verbose stack     at Request._callback (C:\Program Files (x86)\nodejs\node_modules\npm\node_modules\npm-registry-client\lib\request.js:178:14)
+34 verbose stack     at Request.self.callback (C:\Program Files (x86)\nodejs\node_modules\npm\node_modules\request\request.js:344:22)
+34 verbose stack     at Request.emit (events.js:110:17)
+34 verbose stack     at Request.<anonymous> (C:\Program Files (x86)\nodejs\node_modules\npm\node_modules\request\request.js:1239:14)
+34 verbose stack     at Request.emit (events.js:129:20)
+34 verbose stack     at IncomingMessage.<anonymous> (C:\Program Files (x86)\nodejs\node_modules\npm\node_modules\request\request.js:1187:12)
+34 verbose stack     at IncomingMessage.emit (events.js:129:20)
+34 verbose stack     at _stream_readable.js:908:16
+34 verbose stack     at process._tickCallback (node.js:355:11)
+35 verbose statusCode 403
+36 verbose pkgid tlc
+37 verbose cwd D:\tlc
+38 error Windows_NT 6.3.9600
+39 error argv "C:\\Program Files (x86)\\nodejs\\\\node.exe" "C:\\Program Files (x86)\\nodejs\\node_modules\\npm\\bin\\npm-cli.js" "publish"
+40 error node v0.12.0
+41 error npm  v2.5.1
+42 error code E403
+43 error forbidden Attempting to modify version 0.0.5,
+43 error which was previously published on 2015-03-06T23:56:59.236Z.
+43 error This is forbidden, to maintain package integrity.
+43 error Please update the version number and try again.: tlc
+44 error If you need help, you may report this error at:
+44 error     <http://github.com/npm/npm/issues>
+45 verbose exit [ 1, true ]
