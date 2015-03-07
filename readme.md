@@ -64,15 +64,16 @@ Each tag creates a new context, and before any commands are executed, it consist
 JSON data object.  For example: `bind $msg '.message';` from above create's the variable `msg`, and writes "Hello World" to it from the JSON object.
 This command takes 2 arguments- first, a variable reference to bind into, and second, a JSONPath formatted string to reference the binding.  
 
-Our second command, `apply --append=$msg;`, de-reference to our variable reference, `msg`.  The `apply` command is used for applying 
+Our second command, `apply --append=$msg;`, de-reference's our variable `msg`.  The `apply` command is used for applying 
 changes to the tag we are executing commands on, in this case, appending to it.
 
 Note that we can shorten our tlc statement to `bind $msg '.message'; apply --append;` and it will still apply the contents of the `msg` variable.
-This is because by `bind`ing it, `msg` has become the *focus* variable.  All core commands will use the focus variable if none is provided.  This
-is both for syntactic convenience, and also to allow simple chaining on the focus variable, for example:
+This is because by `bind`ing it, `msg` has become the **focus** variable.  All core commands will use the focus variable if none is provided.  This
+is both for syntactic convenience, and also to allow simple chaining on the focus variable, for example, if we were rendering a VERY 
+simple product page:
 	
 	var productData = {
-		"name" : "cat food"
+		"name" : "pie"
 		"price" : "3.14"
 		}
 
@@ -104,16 +105,47 @@ The full list of core commands:
 * `focus` : set the focus to a different variable.
 * `math` : perform arithmetic on the focus variable
 * `datetime` : set the focus variable to the current date.  `--out='pretty'` or `--out='mdy'` formats are supported.
+* `is` : used in conditionals (see below).
 
 ## Modules
 
 Modules allow developers to extend the command set usable in tlc:
 
 	var tlc = require('tlc');
-	var template = require('tlc-template');
-
-	tlc.addModule('template',template);
+	var moduleObject = require('./mymodule.js');
+	tlc.addModule('mymodule',moduleObject);
 	
 This module can be referenced in templates:
 
-	<div data-tlc="template#append --templateid='sideBarTemplate'; bind $var '.sidebar[2]'; tlc;"></div>
+	<div data-tlc="bind $var '.some.var'; mymodule# --arg=$var; apply --append;"></div>
+
+One module that is not-quite-core but you might find awfully useful is [template](https://github.com/michaelchance/tlc-template)
+
+For more information, please visit the [Module API](modules.md)
+	
+## Conditionals
+
+	<div data-tlc="
+		bind $new '.user.is_new';
+		if(is $new --eq='1';){{
+			bind $user '.user';
+			template#translate --templateid='newUserWelcomeMessage' --data=$user;
+		}};
+		"></div>
+		
+
+	
+
+
+## Loops
+
+	<ul data-tlc="
+		bind $arr '.path.to.array';
+		foreach $item in $arr {{
+			template#translate --templateid='listItemTemplate' --data=$item;
+			apply --append;
+		}};
+		"></ul>
+
+
+	
