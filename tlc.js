@@ -49,6 +49,25 @@ var tlc = {
 		templatePackages[namespace] = templates;
 		}
 	}
+	
+function TlcContext($tag,globals,commands,data){
+	this.$tag = $tag;
+	this.commands = commands;
+	this.globals = globals;
+	this.data = data;
+	}
+TlcContext.prototype.focus = function(value){
+	if(typeof value == 'undefined'){
+		//all good
+		}
+	else{
+		this.globals.binds[this.globals.focusBind] = value;
+		}
+	return this.globals.binds[this.globals.focusBind];
+	}
+TlcContext.prototype.arguments = function(){
+	
+	}
 module.exports = tlc;
 
 	function argsToObject(args,globals){
@@ -111,7 +130,9 @@ module.exports = tlc;
 				//IE8 doesn't like .parse, wants 'parse'.
 				var commands = cmdParser['parse'](tlc);
 				if(!_.isEmpty(commands)){
-					executeCommands($tag,{},commands,data);
+					var globals = {};
+					var context = new TlcContext($tag,globals,commands,data);
+					executeCommands($tag,globals,commands,data,context);
 					}
 				}
 			catch(e)	{
@@ -122,7 +143,7 @@ module.exports = tlc;
 		return r;
 		}
 	
-	function executeCommands($tag,globals,commands,data){
+	function executeCommands($tag,globals,commands,data,context){
 		var r = true;
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		// NOTE -> if this extend is set to deep copy, any if statements w/ bind in them will stop working. that deep extend should be moved into translate, where execute is called.
@@ -170,9 +191,60 @@ module.exports = tlc;
 				}
 			
 			if(module[cmd.name] && typeof module[cmd.name] === 'function'){
-				var args = {};
 				cmd.args = cmd.args || [];
-				return module[cmd.name](cmd, globals);
+				if(cmd.module == 'core'){
+					return module[cmd.name](cmd, globals);
+					}
+				else{
+					var args = argsToObject(cmd.args,globals);
+					return module[cmd.name]({
+						focus : function(value){
+							if(typeof value == 'undefined'){
+								//all good
+								}
+							else{
+								globals.binds[globals.focusBind] = value;
+								}
+							return globals.binds[globals.focusBind];
+							},
+
+						$focus : function($tag){
+							if(typeof $tag == 'undefined'){
+								//all good
+								}
+							else{
+								globals.tags[globals.focusTag] = $tag;
+								}
+							globals.tags[globals.focusTag];
+							},
+
+						args : function(){
+							if(typeof arguments[0] === 'string'){
+								var arg = args[arguments[0]];
+								//get from hash of names
+								return arg;
+								}
+							else if(typeof arguments[0] === 'number'){
+								var arg = cmd.args[arguments[0]];
+								return arg;
+								}
+							else if (typeof arguments[0] === 'function'){
+								//run function for each argument
+								var r = true;
+								for(var i in cmd.args){
+									if(arguments[0](cmd.args[i])){
+										//all good
+										}
+									else{
+										r = false;
+										};
+									}
+								return r;
+								}
+							return null;
+							}
+						});					
+					}
 				}
 			else{
 				console.error("Command "+cmd.name+" does not exist in module "+cmd.module);
