@@ -43,7 +43,7 @@ var tlc = {
 		return translate($element,data);	
 		},
 	addModule : function(namespace, module){
-		modules[name] = module;
+		modules[namespace] = module;
 		},
 	addTemplates : function(namespace, templates){
 		templatePackages[namespace] = templates;
