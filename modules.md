@@ -25,14 +25,14 @@ The `tlc` object passed to the command serves as a public API, and has the follo
 
 ### focus
 	tlc.focus([value]);
-> Get or Set the current focus variable's value.  Changing the focus variable can only be done by the core commands `bind`, `set`, and `focus`.
+Get or Set the current focus variable's value.  Changing the focus variable can only be done by the core commands `bind`, `set`, and `focus`.
 ### $focus
 	tlc.$focus([value]);
-> Get or Set the current focus tag's value.  Changing the focus tag can only be done by the core commands `bind`, `set`, and `focus`.
+Get or Set the current focus tag's value.  Changing the focus tag can only be done by the core commands `bind`, `set`, and `focus`.
 ### args
 	tlc.args([key]);
-> Gets the longopt (`--key='value'`) for the key.  In the case of repeat longopts, it returns the final one.
+Gets the longopt (`--key='value'`) for the key.  In the case of repeat longopts, it returns the final one.
 	tlc.args([index]);
-> Gets the argument (object) for the index (int).
+Gets the argument (object) for the index (int).
 	tlc.args([mapFunction]);
-> Run a function for each argument in sequence.
+Run a function for each argument in sequence.
