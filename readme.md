@@ -84,7 +84,7 @@ simple product page:
 		math --precision='0';
 		format --prepend='$' --append='.';
 		focus $cents;
-		format --prepend='<span class=\"cents\">' --append='</span>';
+		format --prepend='<span class=cents>' --append='</span>';
 		apply --append=$dollars;
 		apply --append=$cents;
 		"</div>
