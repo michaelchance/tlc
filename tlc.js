@@ -215,7 +215,7 @@ module.exports = tlc;
 							else{
 								globals.tags[globals.focusTag] = $tag;
 								}
-							globals.tags[globals.focusTag];
+							return globals.tags[globals.focusTag];
 							},
 
 						args : function(){
