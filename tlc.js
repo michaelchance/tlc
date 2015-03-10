@@ -4,7 +4,6 @@ var jsonPath = require('JSONPath');
 var PEG = require('pegjs');
 
 var modules = {};
-var templatePackages = {};
 var cmdParser = {};
 
 var $ = {};
@@ -13,7 +12,7 @@ var tlc = {
 	init : function(script){
 		cmdParser = PEG.buildParser(script);
 		},
-	run : function($element, data, template){
+	run : function($element, data){
 		if(typeof $element === 'function'){
 			$ = $element;
 			}
@@ -21,32 +20,12 @@ var tlc = {
 			//Now we're in a tlc core call
 			//don't need to do anything special
 			}
-		if(template){
-			var templatePointerArray = template.split('#');
-			if(templatePointerArray.length == 2 && 
-				templatePackages[templatePointerArray[0]] && 
-				templatePackages[templatePointerArray[0]][templatePointerArray[1]]){
-				$element.append(templatePackages[templatePointerArray[0]][templatePointerArray[1]].html())
-				}
-			else {
-				//console.error('could not process template string: '+template);
-				return false;
-				}
-			}
-		else if(typeof template !== 'undefined') {
-			//template was not a jQuery object, throw a tantrum
-			//console.error("TLC error: template provided was not a jQuery object");
-			}
-		else{/*no template specified, meh*/}
 		
 		data = data || {};
 		return translate($element,data);	
 		},
 	addModule : function(namespace, module){
 		modules[namespace] = module;
-		},
-	addTemplates : function(namespace, templates){
-		templatePackages[namespace] = templates;
 		}
 	}
 	
@@ -368,8 +347,7 @@ module.exports = tlc;
 			var argObj = argsToObject(cmd.args, globals);
 			var $tag = globals.tags[globals.focusTag];
 			var data = argObj.data || {};
-			var template = argObj.template || null;
-			return tlc.run($tag, data, template);
+			return tlc.run($tag, data);
 			},
 		format : function(cmd,globals)	{
 			var r = true;
