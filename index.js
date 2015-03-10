@@ -248,5 +248,8 @@ module.exports = {
 				return callback(null, rendered);
 				}
 			});
+		},
+	run : function($obj,data){
+		tlc.run($obj,data);
 		}
 	}
