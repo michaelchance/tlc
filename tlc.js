@@ -748,7 +748,7 @@ module.exports = tlc;
 				len = Number(len);
 				if (r.length > len) {
 					r = r.substring(0, len); //Truncate the content of the string
-					var tr = $.trim(r.replace(/\w+$/, '')); //go back to the end of the previous word to ensure that we don't truncate in the middle of a word. trim trailing whitespace.
+					var tr = r.replace(/\w+$/, ''); //go back to the end of the previous word to ensure that we don't truncate in the middle of a word. trim trailing whitespace.
 					//make sure that the trimmed response is not zero length. If it is, tr is ignored and the response 'may' be chopped in the middle of a word. better than a blank trim.
 					if(tr.length)	{
 						r = tr;
