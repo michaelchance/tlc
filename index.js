@@ -249,7 +249,10 @@ module.exports = {
 				}
 			});
 		},
-	run : function($obj,data){
-		tlc.run($obj,data);
+	run : function($obj,data,options){
+		return tlc.run($obj,data,options);
+		},
+	modules : function(){
+		return tlc.modules();
 		}
 	}

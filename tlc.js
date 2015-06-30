@@ -12,7 +12,7 @@ var tlc = {
 	init : function(script){
 		cmdParser = PEG.buildParser(script);
 		},
-	run : function($element, data){
+	run : function($element, data, options){
 		if(typeof $element === 'function'){
 			$ = $element;
 			}
@@ -22,10 +22,13 @@ var tlc = {
 			}
 		
 		data = data || {};
-		return translate($element,data);	
+		return translate($element,data,options);	
 		},
 	addModule : function(namespace, module){
 		modules[namespace] = module;
+		},
+	modules : function(){
+		return modules;
 		}
 	}
 	
@@ -89,29 +92,30 @@ module.exports = tlc;
 		return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 		}
 	
-	function translate($ele, data){
+	function translate($ele, data, options){
 	
 		// console.log('translating');
 		// console.dir(data);
+		
+		options = options || {};
+		options.tlcAttr = options.tlcAttr || 'data-tlc';
+		
 		var r = true;
 		var $elist;
 		if(typeof $ele == 'function'){
-			$elist = $('[data-tlc]');
+			$elist = $('['+options.tlcAttr+']');
 			}
 		else if (typeof $ele == 'object'){
-			$elist = $('[data-tlc]',$ele);
+			$elist = $('['+options.tlcAttr+']',$ele);
 			}
-		// console.log($ele.html());
-		// console.log($('[data-tlc]',$('body')).length);
 		$elist.each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
-			var $tag = $(this), tlc = $tag.attr('data-tlc');
+			var $tag = $(this), tlc = $tag.attr(options.tlcAttr);
 			try{
 				//IE8 doesn't like .parse, wants 'parse'.
 				var commands = cmdParser['parse'](tlc);
 				if(!_.isEmpty(commands)){
 					var globals = {};
-					var context = new TlcContext($tag,globals,commands,data);
-					executeCommands($tag,globals,commands,data,context);
+					executeCommands($tag,globals,commands,data,options);
 					}
 				}
 			catch(e)	{
@@ -122,7 +126,7 @@ module.exports = tlc;
 		return r;
 		}
 	
-	function executeCommands($tag,globals,commands,data,context){
+	function executeCommands($tag,globals,commands,data,options){
 		var r = true;
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		// NOTE -> if this extend is set to deep copy, any if statements w/ bind in them will stop working. that deep extend should be moved into translate, where execute is called.
@@ -137,7 +141,7 @@ module.exports = tlc;
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 			var cmd = commands[i];
 			if(handlers[cmd.type]){
-				if(handlers[cmd.type]($tag,cmd,globals,data)){}
+				if(handlers[cmd.type]($tag,cmd,globals,data,options)){}
 				else{
 					// console.error("The following command has returned false in execution:");
 					// console.dir(cmd);
@@ -156,7 +160,7 @@ module.exports = tlc;
 		return r;
 		}
 	var handlers = {
-		command : function($tag,cmd,globals,data){
+		command : function($tag,cmd,globals,data,options){
 			var module;
 			if(cmd.module == 'core'){
 				module = core;
