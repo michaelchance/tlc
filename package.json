@@ -1,8 +1,8 @@
 {
   "name": "tlc",
-  "version": "0.0.20",
+  "version": "0.1.00",
   "description": "a templating engine",
-  "main": "index.js",
+  "main": "tlc.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
