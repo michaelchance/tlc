@@ -1,6 +1,6 @@
 {
   "name": "tlc",
-  "version": "0.1.01",
+  "version": "0.1.02",
   "description": "a templating engine",
   "main": "tlc.js",
   "scripts": {
