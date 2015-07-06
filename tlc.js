@@ -1,13 +1,25 @@
 (function(){
+	var isNode = false;
+	// Only Node.JS has a process variable that is of [[Class]] process 
+	try {
+		isNode = Object.prototype.toString.call(global.process) === '[object process]' 
+		} catch(e) {}
 	
-	var _ = _ || require('lodash');
-
-	var jsonPath = jsonPath || require('JSONPath');
-	var PEG = PEG || require('pegjs');
+	if(isNode){
+		root = {};
+		}
+	else {
+		root = window;
+		}
+	
+	var _ = root._ || require('lodash');
+	var jsonPath = root.jsonPath || require('JSONPath');
+	var PEG = root.PEG || require('pegjs');
 
 	var TLC = function(){
 		var _self = this;
 		this.modules = {};
+		this.$ = root.$ || root.jQuery || false;
 		this.cmdParser = PEG.buildParser(grammar);
 		this.handlers = {
 			command : function($tag,cmd,globals,data,options){
@@ -554,7 +566,6 @@
 		function errorMessage(e){
 			return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 			}
-		
 	TLC.prototype.translate = function($ele, data, options){
 		var _self = this;
 		// console.log('translating');
@@ -570,7 +581,12 @@
 			//console.dir($elist);
 			}
 		else if (typeof $ele == 'object'){
-			$elist = _self.$('['+options.tlcAttr+']',$ele);
+			if(typeof $ele.addBack !== 'function'){
+				$elist = _self.$('['+options.tlcAttr+']',$ele);
+				}
+			else {
+				$elist = _self.$('['+options.tlcAttr+']',$ele).addBack();				
+				}
 			}
 		$elist.each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
 			var $tag = _self.$(this), tlc = $tag.attr(options.tlcAttr);
@@ -965,11 +981,7 @@
 "lb\n"+
 " = \";\"\n";
 	
-	var isNode = false;
-	// Only Node.JS has a process variable that is of [[Class]] process 
-	try {
-		isNode = Object.prototype.toString.call(global.process) === '[object process]' 
-		} catch(e) {}
+	
 	
 	if(isNode){
 		module.exports = TLC;
