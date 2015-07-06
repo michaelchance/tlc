@@ -15,14 +15,13 @@
 				if(cmd.module == 'core'){
 					module = _self.core;
 					}
-				else if (modules[cmd.module]){
+				else if (_self.modules[cmd.module]){
 					module = _self.modules[cmd.module];
 					}
 				else {
 					// console.error("Unknown module "+cmd.module);
 					return false;
 					}
-				
 				if(module[cmd.name] && typeof module[cmd.name] === 'function'){
 					cmd.args = cmd.args || [];
 					if(cmd.module == 'core'){
@@ -110,7 +109,7 @@
 				// console.log('IF');
 				var p1; //first param for comparison.
 				var ifCmd = cmd.When;
-				if(handlers.command($tag,ifCmd,globals,data)){
+				if(_self.handlers.command($tag,ifCmd,globals,data)){
 					//do the isTrue
 					// console.log('in the isTrue');
 					if(cmd.IsTrue){
@@ -501,7 +500,7 @@
 
 	TLC.prototype.run = function($element, data, options){
 		if(typeof $element === 'function'){
-			_self.$ = $element;
+			this.$ = $element;
 			}
 		else{
 			//Now we're in a tlc core call
@@ -568,6 +567,7 @@
 		var $elist;
 		if(typeof $ele == 'function'){
 			$elist = _self.$('['+options.tlcAttr+']');
+			//console.dir($elist);
 			}
 		else if (typeof $ele == 'object'){
 			$elist = _self.$('['+options.tlcAttr+']',$ele);
@@ -590,7 +590,8 @@
 		return r;
 		}
 		
-	TLC.prototype.executeCommands($tag,globals,commands,data,options){
+	TLC.prototype.executeCommands = function($tag,globals,commands,data,options){
+		var _self = this;
 		var r = true;
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
 		// NOTE -> if this extend is set to deep copy, any if statements w/ bind in them will stop working. that deep extend should be moved into translate, where execute is called.
@@ -604,8 +605,8 @@
 			},globals);
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 			var cmd = commands[i];
-			if(handlers[cmd.type]){
-				if(handlers[cmd.type]($tag,cmd,globals,data,options)){}
+			if(_self.handlers[cmd.type]){
+				if(_self.handlers[cmd.type]($tag,cmd,globals,data,options)){}
 				else{
 					// console.error("The following command has returned false in execution:");
 					// console.dir(cmd);
@@ -971,7 +972,7 @@
 		} catch(e) {}
 	
 	if(isNode){
-		module.exports = TLC:
+		module.exports = TLC;
 		}
 	else {
 		window.TLC = TLC;
