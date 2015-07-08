@@ -42,6 +42,7 @@
 					else{
 						var args = argsToObject(cmd.args,globals);
 						return module[cmd.name]({
+							tlc : _self,
 							focus : function(value){
 								if(typeof value == 'undefined'){
 									//all good
