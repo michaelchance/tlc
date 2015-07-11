@@ -586,7 +586,7 @@
 				$elist = _self.$('['+options.tlcAttr+']',$ele);
 				}
 			else {
-				$elist = _self.$('['+options.tlcAttr+']',$ele).addBack();				
+				$elist = _self.$('['+options.tlcAttr+']',$ele).addBack('['+options.tlcAttr+']');				
 				}
 			}
 		$elist.each(function(index,value){ //addBack ensures the container element of the template parsed if it has a tlc.
