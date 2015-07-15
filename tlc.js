@@ -23,6 +23,8 @@
 		this.cmdParser = PEG.buildParser(grammar);
 		this.handlers = {
 			command : function($tag,cmd,globals,data,options){
+				console.log('command');
+				console.log(options);
 				var module;
 				if(cmd.module == 'core'){
 					module = _self.core;
@@ -42,6 +44,7 @@
 					else{
 						var args = argsToObject(cmd.args,globals);
 						return module[cmd.name]({
+							options : options,
 							tlc : _self,
 							focus : function(value){
 								if(typeof value == 'undefined'){
@@ -118,7 +121,7 @@
 					}
 				return cmd.Set.value;
 				},
-			IF : function($tag,cmd,globals,data){
+			IF : function($tag,cmd,globals,data,options){
 				// console.log('IF');
 				var p1; //first param for comparison.
 				var ifCmd = cmd.When;
@@ -126,21 +129,21 @@
 					//do the isTrue
 					// console.log('in the isTrue');
 					if(cmd.IsTrue){
-						return _self.executeCommands($tag,globals,cmd.IsTrue.statements,data);
+						return _self.executeCommands($tag,globals,cmd.IsTrue.statements,data,options);
 						}
 					}
 				else{
 					//do the isfalse
 					// console.log('in the isFalse');
 					if(cmd.IsFalse){
-						return _self.executeCommands($tag,globals,cmd.IsFalse.statements,data);
+						return _self.executeCommands($tag,globals,cmd.IsFalse.statements,data,options);
 						}
 					}
 					
 				return true;
 				},
 			WHILE : function($tag,cmd,globals,data){/*unfinished*/},
-			FOREACH : function($tag,cmd,globals,data){
+			FOREACH : function($tag,cmd,globals,data, options){
 				//USAGE: 
 				//		bind $items '.@DOMAINS'; 
 				//		foreach $item in $items {{
@@ -151,7 +154,7 @@
 				for(var index in globals.binds[cmd.Members.value])	{
 					globals.binds[cmd.Set.value] = globals.binds[cmd.Members.value][index];
 					globals.focusBind = cmd.Set.value;
-					if(!_self.executeCommands($tag,globals,cmd.Loop.statements,globals.binds[cmd.Members.value][index])){
+					if(!_self.executeCommands($tag,globals,cmd.Loop.statements,globals.binds[cmd.Members.value][index],options)){
 						r = false;
 						break;
 						}
@@ -608,6 +611,8 @@
 		}
 		
 	TLC.prototype.executeCommands = function($tag,globals,commands,data,options){
+		console.log('executeCommands');
+		console.log(options);
 		var _self = this;
 		var r = true;
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
@@ -623,6 +628,7 @@
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 			var cmd = commands[i];
 			if(_self.handlers[cmd.type]){
+				console.log(cmd.type);
 				if(_self.handlers[cmd.type]($tag,cmd,globals,data,options)){}
 				else{
 					// console.error("The following command has returned false in execution:");
