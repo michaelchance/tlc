@@ -23,8 +23,8 @@
 		this.cmdParser = PEG.buildParser(grammar);
 		this.handlers = {
 			command : function($tag,cmd,globals,data,options){
-				console.log('command');
-				console.log(options);
+				// console.log('command');
+				// console.log(options);
 				var module;
 				if(cmd.module == 'core'){
 					module = _self.core;
@@ -611,8 +611,8 @@
 		}
 		
 	TLC.prototype.executeCommands = function($tag,globals,commands,data,options){
-		console.log('executeCommands');
-		console.log(options);
+		// console.log('executeCommands');
+		// console.log(options);
 		var _self = this;
 		var r = true;
 		//make sure all the globals are defined. whatever is passed in will overwrite the defaults. that happens w/ transmogrify
@@ -628,7 +628,7 @@
 		for(var i = 0, L = commands.length; i < L; i += 1)	{
 			var cmd = commands[i];
 			if(_self.handlers[cmd.type]){
-				console.log(cmd.type);
+				// console.log(cmd.type);
 				if(_self.handlers[cmd.type]($tag,cmd,globals,data,options)){}
 				else{
 					// console.error("The following command has returned false in execution:");
