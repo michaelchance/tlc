@@ -268,7 +268,8 @@
 					// this.handle_apply_verb(theVerb,argObj,globals,cmd);
 			// ### TODO -> need to update the verbs to support apply ~someothertag --dataset=$var --someVerb
 					var $tag = globals.tags[globals.focusTag];
-					var data = argObj.variable ? globals.binds[argObj.variable] : globals.binds[globals.focusBind];
+					//var data = argObj.variable ? globals.binds[argObj.variable] : globals.binds[globals.focusBind];
+					var data = globals.binds[globals.focusBind];
 					//if the booleans are not stringified, append/prepend won't output them.
 					if(data === true || data === false)	{data = data.toString()}
 					switch(theVerb)	{
