@@ -89,7 +89,7 @@
 										}
 									return r;
 									}
-								return null;
+								return argsToArray(cmd.args,globals);
 								}
 							});					
 						}
@@ -567,7 +567,58 @@
 				}
 			return r;
 			}
-
+		function argsToArray(args, globals){
+			// console.log('argsToArray');
+			// console.log(args);
+			var r = [];
+			if(!_.isEmpty(args)){
+				for(var i = 0, L = args.length; i < L; i += 1)	{
+					var type = (args[i].type == 'longopt' && args[i].value) ? args[i].value.type : args[i].type;
+					if(type == 'tag')	{
+						r.push(globals.tags[args[i].value.tag]);
+						// r.tag = args[i].value.tag;
+						// r[args[i].value.tag] = globals.tags[args[i].value.tag];
+						}
+					else if(args[i].value == null)	{
+						r.push(args[i].key);
+						// r[args[i].key] = true; //some keys, like append or media, have no value and will be set to null.
+						} 
+					else if(type == 'variable')	{
+						// console.log(args[i]);
+						//this handles how most variables are passed in.
+						if(args[i].key)	{
+							r.push(globals.binds[args[i].value.value]);
+							// r[args[i].key] = globals.binds[args[i].value.value];
+							// r.variable = (args[i].type == 'longopt' && args[i].value) ? args[i].value.value : args[i].value;
+							}
+						//this handles some special cases, like:  transmogrify $var --templateid='chkoutAddressBillTemplate';
+						else if(typeof args[i].value == 'string')	{
+							r.push(globals.binds[args[i].value]);
+							// r.variable = args[i].value;
+							// r[args[i].value] = globals.binds[args[i].value];
+							}
+						else	{
+							//console.error("in argsToObject, type is set to variable, but no key is set AND the value is not a string.");
+							//something unexpected happened.  no key. value is an object.
+							}
+						}
+					
+					else if(type == 'scalar')	{
+						// console.log('scalar');
+						// console.log(args[i]);
+						r.push(args[i].value);
+						// r[args[i].key] = args[i].value.value;
+						}
+					else {
+						// console.log('UNKNOWN');
+						// console.log(type);
+						//??
+						}
+	//				r[args[i].key+"_type"] = (args[i].type == 'longopt') ? args[i].value.type : args[i].type;
+					}
+				}
+			return r;
+			}
 		function errorMessage(e){
 			return e.line !== undefined && e.column !== undefined ? "Line " + e.line + ", column " + e.column + ": " + e.message : e.message;
 			}
