@@ -44,7 +44,7 @@
 					else{
 						var args = argsToObject(cmd.args,globals);
 						return module[cmd.name]({
-							options : options,
+							options : _.cloneDeep(options),
 							tlc : _self,
 							focus : function(value){
 								if(typeof value == 'undefined'){
@@ -516,14 +516,18 @@
 		}
 
 	TLC.prototype.run = function($element, data, options){
-		if(typeof $element === 'function'){
+		options = options || {};
+		if(options.$){
+			this.$ = options.$;
+			}
+		else if(typeof $element === 'function'){
 			this.$ = $element;
 			}
 		else{
 			//Now we're in a tlc core call
 			//don't need to do anything special
 			}
-		
+		// console.log(this.$);
 		data = data || {};
 		return this.translate($element,data,options);
 		}
