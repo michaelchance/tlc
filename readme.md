@@ -1,6 +1,6 @@
 # Tag Line Commands
 
-tlc is:
+=tlc is:
 
 * A Verbose, Robust Templating Language
 * Valid HTML5
