@@ -26,6 +26,28 @@ A simple way to execute javascript functions and transform+display json data wit
 
 `<h1 data-tlc="command --parameter; othercommand --with=$variable">Hello!</h1>`
 
+## An example of usage with jQuery
+
+```javascript
+//Include the tlc.js file from this repo in your html file
+var tlc = new TLC();
+tlc.run($('#someElement'), {'':'Hello World'});
+```
+
+in your html:
+```html
+<div id="#someElement">
+	<h1 data-tlc="bind $var '.message'; apply --append;"></h1>
+</div>
+```
+
+Outputs
+```html
+<div id="#someElement">
+	<h1 data-tlc="bind $var '.message'; apply --append;">Hello World</h1>
+</div>
+```
+
 ## An example of usage with Express
 ```javascript	
 var express = require('express');
