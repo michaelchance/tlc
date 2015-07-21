@@ -36,14 +36,14 @@ tlc.run($('#someElement'), {'message':'Hello World'});
 
 in your html:
 ```html
-<div id="#someElement">
+<div id="someElement">
 	<h1 data-tlc="bind $var '.message'; apply --append;"></h1>
 </div>
 ```
 
 Outputs
 ```html
-<div id="#someElement">
+<div id="someElement">
 	<h1 data-tlc="bind $var '.message'; apply --append;">Hello World</h1>
 </div>
 ```
