@@ -3,23 +3,28 @@
 A simple way to execute javascript functions and transform+display json data within HTML. 
 
 ## Why TLC:
-* You need a simple+powerful way to display json data in html.
-* You need an inline template that doesn't create invalid HTML5 (ex: mustache+handlebars, jade, etc.)
-* You want to store transformational business logic within html5 (ex: PHP) resulting in less code sprawl, but still want to do all heavy lifting in javascript.
-* SEO is important, but so is code-recyclability -- isomorphic frameworks (like IsoMagic) allow the same tlc display logic to be executed on both server (for google) and browser (for people).  
-* You want non-coding web-designers to be able to preview layout changes without a server environment.
+* You need an easy way to display json data in html.
+* You would prefer inline document templates with simple syntax that can be parsed using standard HTML5 grammar (unlike mustache+handlebars, jade, etc.)
+* You plan to write the bulk of your application in javascript. You simply want an obvious way to call that javascript code within the html. 
+* You loathe code sprawl and believe that embedding simple transformational display logic within html5 elements is the most maintainable code pattern for web applications. 
+* You are a lazy SEO and Single Page App developer.  So you want to use the same templates on both server (for google SEO) and browser/app (for humans).  Combine TLC with an isomorphic javascript framework (like IsoMagic) to use the recycle 100% of your display logic.
+* You are "The Programmer" in a tribe of non-coding web-monkeys -- so allowing co-workers to be able to easily preview+test HTML layout and style changes without needing to bother you, or needing any special server environment is really appealing.
+* You'd like to work less, code more, and spend less time debugging. 
 
-## Key Advantages:
+
+## Key Differences:
 * Unlike most other template engines -- TLC is stored as INLINE HTML5 and will render+debug perfectly in any HTML5 editor.  Designers create HTML syntax pre-populated with Lorem Ipsum that is hidden or replaced with real data when executed. 
-* TLC uses shell --script --syntax, core syntax is designed for readability/maintainability.  It easily iterates over json data with loops and stuff.
-* Unlike javascript, TLC syntax fits nicely in HTML attributes- it avoids using quotes for clean legible code and fewer typos. Modules still run as trusted code, but are operate with less context.  
+* TLC uses shell --script --syntax, core syntax is designed for readability/maintainability.  It easily iterates over json data with loops and stuff too.
+* Unlike javascript, TLC syntax fits nicely in HTML attributes- it avoids using quotes for clean legible code and fewer typos. Modules still run as trusted code, but are operate with less context.
 * TLC is Lightweight + Extensible, you add your own functions (with javascript) and then call them with --parameters. 
-* TLC is packaged for use with ExpressJS, so TLC display logic can run server side or on the browser (great for SEO + single page apps)
-* Useable with jQuery. 
+* TLC is packaged for use with ExpressJS, so TLC display logic can run server side or on the browser (great for SEO of single page apps)
+* Friendly with modules like JQuery. 
+
+
 
 ## Syntax Preview:
 
-<h1 data-tlc="command --parameter; othercommand --with=$variable">Hello!</h1>
+`<h1 data-tlc="command --parameter; othercommand --with=$variable">Hello!</h1>`
 
 ## An example of usage with Express
 	
