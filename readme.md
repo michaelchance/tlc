@@ -27,31 +27,29 @@ A simple way to execute javascript functions and transform+display json data wit
 `<h1 data-tlc="command --parameter; othercommand --with=$variable">Hello!</h1>`
 
 ## An example of usage with Express
-	
-	var express = require('express');
-	var app = express();
+```javascript	
+var express = require('express');
+var app = express();
 
-	var http = require('http');
+var http = require('http');
 
-	var fs = require('fs');
+var fs = require('fs');
 
-	var tlc = require('tlc');
+var TLC = require('tlc');
+var tlc = new TLC();
+var cheerio = require('cheerio); // jQuery-alike library for DOM parsing
 
-	app.engine('html',tlc.express);
-	app.set('views', './path/to/views/'); // specify the views directory
-	app.set('view engine', 'html'); // register the template engine
+app.get('/', function(req,res,next){
+	var $document = fs.readFileSync('index.html', 'utf-8);
+	tlc.run($document, { "message" : "Hello World" });
+	res.send($document.html());
+});
 
-	app.get('/',function(req,res){
-		//The second parameter to render should be a JSON object that the view will be translated over.
-		res.render('index',{
-			message : "Hello World",
-			});
-		});
+http.createServer(app).listen(3000);
+```	
+the contents of index.html:
 
-	http.createServer(app).listen(3000);
-	
-the contents of ./path/to/views/index.html:
-	
+```html
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -67,6 +65,7 @@ the contents of ./path/to/views/index.html:
 	</body>
 
 	</html>
+```
 
 When running the app, localhost:3000 will serve
 > # Hello World
