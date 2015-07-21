@@ -7,9 +7,9 @@ A simple way to execute javascript functions and transform+display json data wit
 * You would prefer inline document templates with simple syntax that can be parsed using standard HTML5 grammar (unlike mustache+handlebars, jade, etc.)
 * You plan to write the bulk of your application in javascript. You simply want an obvious way to call that javascript code within the html. 
 * You loathe code sprawl and believe that embedding simple transformational display logic within html5 elements is the most maintainable code pattern for web applications. 
-* You are a lazy SEO and Single Page App developer.  So you want to use the same templates on both server (for google SEO) and browser/app (for humans).  Combine TLC with an isomorphic javascript framework (like IsoMagic) to use the recycle 100% of your display logic.
-* You are "The Programmer" in a tribe of non-coding web-monkeys -- so allowing co-workers to be able to easily preview+test HTML layout and style changes without needing to bother you, or needing any special server environment is really appealing.
-* You'd like to work less, code more, and spend less time debugging. 
+* You *might* be a Single Page App developer with an SEO problem -- so you need to use the same templates on both server (for google SEO) and browser/app (for humans).  Combine TLC with an isomorphic javascript framework (like IsoMagic) to use the recycle 100% of your display logic.
+* You *might* be "The Programmer" in a tribe of non-coding web-monkeys -- so allowing co-workers to be able to easily preview+test HTML layout and style changes without needing to bother you, or needing any special server environment is really attractive.
+* You'd like to be a more productive javascript developer with a minimal investment of time. 
 
 
 ## Key Differences:
