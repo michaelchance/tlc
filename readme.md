@@ -31,7 +31,7 @@ A simple way to execute javascript functions and transform+display json data wit
 ```javascript
 //Include the tlc.js file from this repo in your html file
 var tlc = new TLC();
-tlc.run($('#someElement'), {'':'Hello World'});
+tlc.run($('#someElement'), {'message':'Hello World'});
 ```
 
 in your html:
