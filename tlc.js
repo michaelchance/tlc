@@ -315,7 +315,7 @@
 							$tag.val(data);
 							break;
 						case 'select' :
-							this.apply_verb_select($tag,argObj,globals); //will modify $tag.
+							// this.apply_verb_select($tag,argObj,globals); //will modify $tag.
 							var dataValue = argObj['select']; //shortcut.
 					//		dump(" -> value for --select: "+dataValue); dump(globals);
 							if($tag.is(':checkbox'))	{
