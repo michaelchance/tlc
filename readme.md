@@ -1,41 +1,77 @@
 # Tag Line Commands
 
-tlc is:
+A simple way to execute javascript functions and transform+display json data within HTML. 
 
-* A Verbose, Robust Templating Language
-* Valid HTML5
-	* designed to fit in attributes- commits to using single-quotes to keep your syntax clean.
-* Shell script-y, readable, obvious
-* Extensible
-* Packaged for use with ExpressJS
-* Will be useable with jQuery
+## Why TLC:
+* You need an easy way to display json data in html.
+* You would prefer inline document templates with simple syntax that can be parsed using standard HTML5 grammar (unlike mustache+handlebars, jade, etc.)
+* You plan to write the bulk of your application in javascript. You simply want an obvious way to call that javascript code within the html. 
+* You loathe code sprawl and believe that embedding simple transformational display logic within html5 elements is the most maintainable code pattern for web applications. 
+* You *might* be a Single Page App developer with an SEO problem -- so you need to use the same templates on both server (for google SEO) and browser/app (for humans).  Combine TLC with an isomorphic javascript framework (like IsoMagic) to use the recycle 100% of your display logic.
+* You *might* be "The Programmer" in a tribe of non-coding web-monkeys -- so allowing co-workers to be able to easily preview+test HTML layout and style changes without needing to bother you, or needing any special server environment is really attractive.
+* You'd like to be a more productive javascript developer with a minimal investment of time. 
 
-An example of usage with Express
-	
-	var express = require('express');
-	var app = express();
 
-	var http = require('http');
+## Key Differences:
+* Unlike most other template engines -- TLC is stored as INLINE HTML5 and will render+debug perfectly in any HTML5 editor.  Designers create HTML syntax pre-populated with Lorem Ipsum that is hidden or replaced with real data when executed. 
+* TLC uses shell --script --syntax, core syntax is designed for readability/maintainability.  It easily iterates over json data with loops and stuff too.
+* Unlike javascript, TLC syntax fits nicely in HTML attributes- it avoids using quotes for clean legible code and fewer typos. Modules still run as trusted code, but are operate with less context.
+* TLC is Lightweight + Extensible, you add your own functions (with javascript) and then call them with --parameters. 
+* TLC is packaged for use with ExpressJS, so TLC display logic can run server side or on the browser (great for SEO of single page apps)
+* Friendly with modules like JQuery. 
 
-	var fs = require('fs');
 
-	var tlc = require('tlc');
 
-	app.engine('html',tlc.express);
-	app.set('views', './path/to/views/'); // specify the views directory
-	app.set('view engine', 'html'); // register the template engine
+## Syntax Preview:
 
-	app.get('/',function(req,res){
-		//The second parameter to render should be a JSON object that the view will be translated over.
-		res.render('index',{
-			message : "Hello World",
-			});
-		});
+`<h1 data-tlc="command --parameter; othercommand --with=$variable">Hello!</h1>`
 
-	http.createServer(app).listen(3000);
-	
-the contents of ./path/to/views/index.html:
-	
+## An example of usage with jQuery
+
+```javascript
+//Include the tlc.js file from this repo in your html file
+var tlc = new TLC();
+tlc.run($('#someElement'), {'message':'Hello World'});
+```
+
+in your html:
+```html
+<div id="someElement">
+	<h1 data-tlc="bind $var '.message'; apply --append;"></h1>
+</div>
+```
+
+Outputs
+```html
+<div id="someElement">
+	<h1 data-tlc="bind $var '.message'; apply --append;">Hello World</h1>
+</div>
+```
+
+## An example of usage with Express
+```javascript	
+var express = require('express');
+var app = express();
+
+var http = require('http');
+
+var fs = require('fs');
+
+var TLC = require('tlc');
+var tlc = new TLC();
+var cheerio = require('cheerio); // jQuery-alike library for DOM parsing
+
+app.get('/', function(req,res,next){
+	var $document = fs.readFileSync('index.html', 'utf-8);
+	tlc.run($document, { "message" : "Hello World" });
+	res.send($document.html());
+});
+
+http.createServer(app).listen(3000);
+```	
+the contents of index.html:
+
+```html
 	<!DOCTYPE html>
 	<html>
 	<head>
@@ -51,20 +87,20 @@ the contents of ./path/to/views/index.html:
 	</body>
 
 	</html>
+```
 
 When running the app, localhost:3000 will serve
 > # Hello World
 
-## Commands
+## Core Commands
 
 The above example introduces 2 of the core commands in tlc, `bind` and `apply`.  Commands are functions, executed with arguments, within a context.
 Each tag creates a new context, and before any commands are executed, it consists solely of the JSON data object being translated.
 
-`bind` is one of the most important commands in tlc- it allows you to bind (and even create) a variable within the tlc's context to a component of
-JSON data object.  For example: `bind $msg '.message';` from above create's the variable `msg`, and writes "Hello World" to it from the JSON object.
+`bind` is one of the most important commands in tlc- it creates+links a variable within the tlc's context to a component of a JSON data object.  For example: `bind $msg '.message';` from above create's the variable `$msg`, and writes "Hello World" to it from the JSON object.
 This command takes 2 arguments- first, a variable reference to bind into, and second, a JSONPath formatted string to reference the binding.  
 
-Our second command, `apply --append=$msg;`, de-reference's our variable `msg`.  The `apply` command is used for applying 
+Our second command, `apply --append=$msg;`, de-reference's our variable `$msg`.  The `apply` command is used for applying 
 changes to the tag we are executing commands on, in this case, appending to it.
 
 Note that we can shorten our tlc statement to `bind $msg '.message'; apply --append;` and it will still apply the contents of the `msg` variable.
